@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <body>
+        <fieldset>
+            <legend>Error Calculator</legend>
+            <input type="text" id="firstInput" name="firstInput">
+            <select id="operation" name="operation">
+                <option value="plus">+</option>
+                <option value="minus">-</option>
+                <option value="multiple">*</option>
+                <option value="divide">/</option>
+            </select>
+            <input type="text" id="secondInput" name="secondInput">
+            <button id="calculate" onclick="calculate()">Calculate</button>
+            <p id="result">Here is the result</p>
+            <p id="answer"></p>
+        </fieldset>
+        <div class="btn-group">
+            <button onclick="cLog()">Console Log Demo</button>
+            <button onclick="cError()">Console Error Demo</button>
+            <button onclick="cTable()">Console Table</button>
+            <button onclick="cDir()">Console Dir</button>
+            <button onclick="cDirXML()">Console Dirxml</button>
+            <button onclick="cGroup()">Console Group</button>
+            <button onclick="cGroupEnd()">Console Group End</button>
+            <button onclick="cTime()">Console Time</button>
+            <button onclick="cTimeEnd()">Console Time End</button>
+            <button onclick="cTrace()">Console Trace</button>
+            <button onclick="globalError()">Trigger a Global Error</button>  
+        </div>
+      </body>
+      <style>
+          .btn-group button{
+                    display: block;
+                }
+      </style>
+    <title>This is a title</title>
+    <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+    <script>
+      window.TrackJS && TrackJS.install({ 
+      token: "c6d43cb88ada44e487fcc546d4bd6458"
+      // for more configuration options, see https://docs.trackjs.com
+      });
+    </script>           
+    <script>
+      class ValidationError extends Error {
+        constructor(message) {
+          super(message);
+          this.name = 'ValidationError';
+        }
+      }
+      function calculate(){
+        try{
+          let operator = document.getElementById("operation").value;
+          let firstInput = Number(document.getElementById('firstInput').value);
+          let secondInput = Number(document.getElementById('secondInput').value);
+          if (firstInput == null || secondInput== null || firstInput == "" || secondInput == "" || isNaN(firstInput) || isNaN(secondInput)){
+            throw new ValidationError('Wrong input type: Please do not leave it empty, make sure the types are number');
+          }if(operator == "plus"){
+            document.getElementById('answer').innerText = firstInput+secondInput;
+          }else if(operator == "minus"){
+            document.getElementById('answer').innerText = firstInput-secondInput;
+          }else if(operator == "multiple"){
+            document.getElementById('answer').innerText = firstInput*secondInput;
+          }else if(operator == "divide"){
+            document.getElementById('answer').innerText = firstInput/secondInput;
+          }
+        }catch(error) {
+          console.error(error.message);
+        }finally{
+          console.log('This is a finally statement');
+        }
+      }
+
+      //The console.log() method prints out a toString representation of the object in the console to the user.
+      function cLog() {
+        let value = document.getElementById("answer").innerText;
+        console.log("This is a console log");
+      }
+      //prints out error messages to the console
+      function cError() {
+          try{
+            if(firstInput == null || secondInput == null || isNaN(firstInput) || isNaN(secondInput) || firstInput == "" || secondInput == ""){
+              console.error("Found Error");
+            }
+          }catch(error){
+              console.error(error.message);
+          }
+        }
+
+      //The console.table() method writes a table in the console view.
+      function cTable() {
+        console.table(["+: plus","-: minus","*: multiple","/: divide"]);
+      }
+
+      //The console.dir() method output the list of object properties of a specified object in the console to the user.
+      function cDir() {
+        console.dir(document.getElementById("answer"));
+      }
+
+      //display an interactive tree of the descendant elements of the specified XML/HTML element
+      function cDirXML() {
+        var myObject = {
+            "foo":{
+            "bar":"data"
+            }
+        }
+        console.dirxml(myObject);
+      }
+
+      //Create a group of messages in the console:
+      function cGroup() {
+        console.log("Hello world!");
+        console.group();
+        console.log("Hello again, this time inside a group!");
+      }
+
+      //End a message group by using the console.groupEnd() method:
+      function cGroupEnd() {
+        console.groupEnd();
+        console.log("and we are back.");
+      }
+
+      //How long does it take to perform calculate() function
+      function cTime() {
+        console.time();
+        calculate();
+        console.timeEnd();
+      }
+
+      function cTimeEnd() {
+        console.time();
+        calculate();
+        console.timeEnd();
+      }
+
+      function cTrace() {
+        function foo() {
+            function bar() {
+                console.trace();
+            }
+            bar();
+        }
+        foo();
+      }
+
+      //The Global Error handler and 3rd Party Tracking
+      function globalError() {
+        throw 'This is a global';
+      }
+      window.onerror = (err) => {
+        console.error('I used onerror to handle the throw in globalError');
+        return true;
+      }
+    </script>
+  </head>
+ 
+</html>
